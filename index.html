@@ -41,6 +41,7 @@
     }
     window.addEventListener('load', () => {
         document.getElementById('go').addEventListener('click', async () => {
+            let start = performance.now();
             let list;
             try {
                 n = +document.getElementById('n').value;
@@ -68,13 +69,18 @@
                 await occasionalSleeper();
             }
             add('p', `${++it}. The prime list is ready!`);
+            document.getElementById('time').innerText = performance.now() - start;
+            document.getElementById('took').classList.remove('unvisible');
         });
 
     });
 </script>
 
 <body>
-    <p> Find all primes between 2 and <input type="number" id="n" min="2" step="1">.</p>
+    <p>
+        Find all primes between 2 and <input type="number" id="n" min="2" step="1">.
+        <span class="unvisible" id="took">Ready, it took <span id="time"></span> ms.</span>
+    </p>
     <button id="go">Go!</button> <span class="unvisible" id="error">Invalid input.</span>
 
 </body>
