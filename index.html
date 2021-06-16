@@ -10,24 +10,46 @@
         .unvisible {
             display: none;
         }
+
         #error {
             font-weight: 900;
             color: red;
         }
+
+        pre {
+            overflow-x: scroll;
+        }
     </style>
 </head>
 <script>
+    function add(what, content) {
+        let el = document.createElement(what);
+        el.innerText = content;
+        document.getElementsByTagName('body')[0].appendChild(el);
+    }
     window.addEventListener('load', () => {
         document.getElementById('go').addEventListener('click', () => {
+            let list;
             try {
-                n = BigInt(document.getElementById('n').value);
+                n = +document.getElementById('n').value;
                 if (n < 2) throw "";
+                list = [...Array(n - 1).keys()].map(i => i + 2);
             } catch (e) {
+                console.error(e);
                 document.getElementById('error').classList.remove('unvisible');
                 return;
             }
+            document.getElementById('n').disabled = true;
             document.getElementById('go').remove();
             document.getElementById('error').remove();
+            let it = 0;
+            add('p', `${++it}. Create a list of integers between 2 and ${n}.`);
+            add('pre', list);
+            for (let i = 0; list[i] * list[i] <= n; ++i) {
+                add('p', `${++it}. Get rid off all composite numbers divisible by ${list[i]}.`);
+                list = list.filter(e => e % list[i] != 0 || e == list[i]);
+                add('pre', list);
+            }
         });
     });
 </script>
@@ -35,6 +57,7 @@
 <body>
     <p> Find all primes between 2 and <input type="number" id="n" min="2" step="1">.</p>
     <button id="go">Go!</button> <span class="unvisible" id="error">Invalid input.</span>
+
 </body>
 
 </html>
